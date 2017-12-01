@@ -27,7 +27,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#fullpage').fullpage({
-              sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
+              //sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
               anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', '5thpage', '6thpage', '7thpage', '8thpage', '9thpage', '10thpage', '11thpage', '12thpage'],
               menu: '#menu',
               navigation: true
@@ -64,33 +64,35 @@
             width: 100%;
         }
     </style>
+    
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 
 </head>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
 
-<div id="fullpage">
+<div id="fullpage" style="background-color: rgb(255, 255, 255);">
     <div class="section " id="section0">
-        <h1><img src="imgs/dollarx.png" width="200" height="83.4" /> can't buy happiness</h1>
+        <h1><img src="imgs/dollarx.png" width="100" height="31.275" /> can't buy happiness</h1>
         <p>they say...</p>
     </div>
     <div class="section " id="section1">
         <h1>… but it can buy 
-        <img src="imgs/nutella.png" width="200" height="200" />, which is kind of the same thing
+        <img src="imgs/nutella.png" width="100" height="100" />, which is kind of the same thing
         </h1>
-        <p>Jokes aside, what does make people happy around the world? Let’s find out!</p>
+        <p>Joke aside, what does make people happy around the world? 
+This website explores the impact of various factors on national happiness. And the results are full of surprises...</p>
     </div>
     <div class="section " id="section2">
         <h1>Are you happy?</h1>
-        <p>Continuous Scrolling Enabled</p>
         <tr>
             <td><div id="sliderObj"></div></td>
         </tr>
         <div>
         <input type="range" min="0" max="10">
-        <input type="range" min="0" max="10" data-rangeSlider>
-        <output></output>
         </div>
     </div>
     <div class="section " id="section3">
@@ -249,7 +251,9 @@
     <div class="section " id="section4">
         <h1>Happier than your compatriots...</h1>
         <p>Congrats!</p>
-        <iframe id="iframex" sandbox="allow-popups allow-scripts allow-forms allow-same-origin" src="test_datamaps.html" marginwidth="0" marginheight="0" style="width: 860px; height: 400px;" scrolling="no"></iframe>
+        <iframe id="iframex" sandbox="allow-popups allow-scripts allow-forms allow-same-origin" 
+        src="test_datamaps.html" marginwidth="0" marginheight="0" frameborder="0"
+        style="width: 900px; height: 600px;" scrolling="no"></iframe>
    </div>
     
     <div class="section " id="section5">
@@ -276,8 +280,8 @@
     </div>
     
     <div class="section " id="section8">
-        <p>Oops, Germany is not really happy since it is only ranked 72th<br>
-        Your own country France is ranked 44th!<br>
+        <p>Oops, X is not really happy since it is only ranked nth<br>
+        Your own country Y is ranked mth!<br>
         You might reconsider your values ;)
         </p>
     </div>
@@ -366,6 +370,11 @@
                 distMin = dist;
                 country = country_name;
             }
+            /*if(country_name == "France")
+            {
+                console.log(country_name + " " + dist);
+                console.log(countries_datas["France"]);
+            }*/
         }
         msg = "Your values and perception of happiness is very close to the people of " + country;
     }

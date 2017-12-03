@@ -3,10 +3,10 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Continuous scrolling - fullPage.js</title>
-    <meta name="author" content="Matthew Howell" />
-    <meta name="description" content="fullPage continuous scrolling demo." />
-    <meta name="keywords"  content="fullpage,jquery,demo,scroll,loop,continuous" />
+    <title>Happiness in the </title>
+    <meta name="author" content="Ahmed Ada, Sylvain Bitton, Thomas Tellier and Madjoline Wahbi" />
+    <meta name="description" content="Happiness vizualisation" />
+    <meta name="keywords"  content="happiness,happy,vizualisation" />
     <meta name="Resource-type" content="Document" />
 
 
@@ -27,47 +27,17 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#fullpage').fullpage({
-              //sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
               anchors: ['firstPage', 'secondPage', '3rdPage', '4thpage', '5thpage', '6thpage', '7thpage', '8thpage', '9thpage', '10thpage', '11thpage', '12thpage'],
               menu: '#menu',
               navigation: true
             });
         });
     </script>
-    <!--test range sliders -->
-    <link rel="stylesheet" href="range-slider.css">
-    <style>
-        *,
-        *:before,
-        *:after {
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-        }
-
-        html {
-            color: #404040;
-            font-family: Helvetica, arial, sans-serif;
-        }
-
-        body {
-            padding: 50px 20px;
-            margin: 0 auto;
-        }
-
-        output {
-            display: block;
-            font-size: 30px;
-            font-weight: bold;
-            text-align: center;
-            margin: 30px 0;
-            width: 100%;
-        }
-    </style>
     
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    
 
 </head>
 <body>
@@ -261,18 +231,10 @@ This website explores the impact of various factors on national happiness. And t
     </div>
     
     <div class="section " id="section6">
-        <p>Money</p>
-        <input type="range" min="0" max="10" id="Economy (GDP per Capita)" onchange="modify_value()">
-        <p>Freedom</p>
-        <input type="range" min="0" max="10" id="Freedom" onchange="modify_value()">
-        <p>Family</p>
-        <input type="range" min="0" max="10" id="Family" onchange="modify_value()">
-        <p>Trust in Governement</p>
-        <input type="range" min="0" max="10" id="Trust (Government Corruption)" onchange="modify_value()">
-        <p>Generosity</p>
-        <input type="range" min="0" max="10" id="Generosity" onchange="modify_value()">
-        <p>Health</p>
-        <input type="range" min="0" max="10" id="Health (Life Expectancy)" onchange="modify_value()">
+        
+        <iframe id="iframey" sandbox="allow-popups allow-scripts allow-forms allow-same-origin" 
+        src="criterion_maps.html" marginwidth="0" marginheight="0" frameborder="0"
+        style="width:100%; height: 100%;" scrolling="no"></iframe>
     </div>
     
     <div class="section " id="section7">
@@ -309,8 +271,6 @@ This website explores the impact of various factors on national happiness. And t
     </div-->
 </div>
 
-<script src="range-slider.js"></script>
-
 <script>
     //doublon with test_datamaps.html, put in JavaScript file
     function get_countries_datas(data)
@@ -336,102 +296,21 @@ This website explores the impact of various factors on national happiness. And t
     $(document).ready(function() {
         $.get("2015.csv", function (data) {
             countries_datas = get_countries_datas(data);
-            for(var country_name in countries_datas) {
-                var sum = 0;
-                for(var i=0; i<sliders_names.length; i++)
-                    sum += countries_datas[country_name][sliders_names[i]];
-                for(var i=0; i<sliders_names.length; i++)
-                    countries_datas[country_name][sliders_names[i]] /= sum;
-            }
-            modify_value();
         });
     });
-
-  function modify_value() {
-    var values = [];
-    var sum = 0;
-    for(var i=0; i<sliders_names.length; i++) {
-        values.push(parseFloat(document.getElementById(sliders_names[i]).value));
-        sum += values[i];
-    }
-    var msg = "You're so sad :(";
-    if(sum > 1e-5)
-    {
-        for(var i=0; i<sliders_names.length; i++)
-            values[i] /= sum;
-        console.log(values);
-        var country = "", distMin = 1000;
-        for(var country_name in countries_datas) {
-            var dist = 0;
-            for(var i=0; i<sliders_names.length; i++)
-                dist += Math.pow(values[i] - countries_datas[country_name][sliders_names[i]], 2);
-            if(dist < distMin)
-            {
-                distMin = dist;
-                country = country_name;
-            }
-            /*if(country_name == "France")
-            {
-                console.log(country_name + " " + dist);
-                console.log(countries_datas["France"]);
-            }*/
-        }
-        msg = "Your values and perception of happiness is very close to the people of " + country;
-    }
-    document.getElementById('p_comparison').innerHTML = msg;
-  }
 </script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+<script src="datamaps.world.min.js"></script>
 <script>
-  /*(function () {
-
-    var selector = '[data-rangeSlider]',
-      elements = document.querySelectorAll(selector);
-
-    // Example functionality to demonstrate a value feedback
-    function valueOutput(element) {
-      var value = element.value,
-        output = element.parentNode.getElementsByTagName('output')[0];
-      output.innerHTML = value;
-    }
-
-    for (var i = elements.length - 1; i >= 0; i--) {
-      valueOutput(elements[i]);
-    }
-
-    Array.prototype.slice.call(document.querySelectorAll('input[type="range"]')).forEach(function (el) {
-      el.addEventListener('input', function (e) {
-        valueOutput(e.target);
-      }, false);
+  var map = new Datamap({
+    element: document.getElementById('map'),
+    fills: {
+          defaultFill: '#c0c0c0'
+        }
     });
-
-    // Basic rangeSlider initialization
-    rangeSlider.create(elements, {
-
-      // Callback function
-      onInit: function () {
-      },
-
-      // Callback function
-      onSlideStart: function (value, percent, position) {
-        console.info('onSlideStart', 'value: ' + value, 'percent: ' + percent, 'position: ' + position);
-      },
-
-      // Callback function
-      onSlide: function (value, percent, position) {
-        console.log('onSlide', 'value: ' + value, 'percent: ' + percent, 'position: ' + position);
-      },
-
-      // Callback function
-      onSlideEnd: function (value, percent, position) {
-        console.warn('onSlideEnd', 'value: ' + value, 'percent: ' + percent, 'position: ' + position);
-      }
-    });
-
-    rangeSlider.create(document.querySelector('#vertical'), {
-      vertical: true
-    });
-
-  })();*/
 </script>
 
 </body>

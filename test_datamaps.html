@@ -53,8 +53,6 @@
           countries_codes[countries[i].properties.name] = countries[i].id;
         }
         
-        console.log(countries_codes);
-        
         var colored_countries = {};
         for (var country_name in countries_codes) {
           if(country_name in countries_datas && "Happiness Score" in countries_datas[country_name]
@@ -62,7 +60,7 @@
           {
             //document.write('<option value="' + country_name + '">' + country_name + '</option>\r\n');
             var happiness = (countries_datas[country_name]["Happiness Score"] - mini) / (maxi - mini);
-            colored_countries[countries_codes[country_name]] = blendColors('#3f83a3', '#f48000', happiness);
+            colored_countries[countries_codes[country_name]] = blendColors('#ffffff', '#3f83a3', happiness);
           }
         }
         console.log(colored_countries);

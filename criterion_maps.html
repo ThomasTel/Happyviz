@@ -1,0 +1,152 @@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+<script src="datamaps.world.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+<style>
+div.left {
+  background: #999;
+    float:left; 
+    width: 20%;
+    height: 100%;
+      display: flex;
+  justify-content: center;
+  align-items: center; 
+  text-align: center;
+}
+p{
+    font-size: 1em;
+    font-family: 'Lato', sans-serif;
+}
+div.container {
+  float:right;
+  width:80%;
+    height: 100%;
+}
+</style>
+<div class="box">
+    <div class="left">
+        <div class="sliders">
+            <p>Money</p>
+            <input type="range" min="0" max="10" id="Economy (GDP per Capita)" oninput="modify_value()" onchange="modify_value()">
+            <p>Freedom</p>
+            <input type="range" min="0" max="10" id="Freedom" oninput="modify_value()" onchange="modify_value()">
+            <p>Family</p>
+            <input type="range" min="0" max="10" id="Family" oninput="modify_value()" onchange="modify_value()">
+            <p>Trust in Governement</p>
+            <input type="range" min="0" max="10" id="Trust (Government Corruption)" oninput="modify_value()" onchange="modify_value()">
+            <p>Generosity</p>
+            <input type="range" min="0" max="10" id="Generosity" oninput="modify_value()"onchange="modify_value()">
+            <p>Health</p>
+            <input type="range" min="0" max="10" id="Health (Life Expectancy)" oninput="modify_value()" onchange="modify_value()">
+        </div>
+    </div>
+    <div class="container" id="container"></div>
+</div>
+<script>    
+    //https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
+    function blendColors(c0, c1, p) {
+        var f=parseInt(c0.slice(1),16),t=parseInt(c1.slice(1),16),R1=f>>16,G1=f>>8&0x00FF,B1=f&0x0000FF,R2=t>>16,G2=t>>8&0x00FF,B2=t&0x0000FF;
+        return "#"+(0x1000000+(Math.round((R2-R1)*p)+R1)*0x10000+(Math.round((G2-G1)*p)+G1)*0x100+(Math.round((B2-B1)*p)+B1)).toString(16).slice(1);
+    }
+
+    //doublon with test_datamaps.html
+    function processColoration(countries_values)
+    { 
+        var countries_codes = {}
+        var countries = Datamap.prototype.worldTopo.objects.world.geometries;
+        for (var i = 0; i < countries.length; i++) {
+          countries_codes[countries[i].properties.name] = countries[i].id;
+        }
+
+        var mini = 1e10, maxi = 0;
+        for (var country_name in countries_codes) {
+          if(country_name in countries_values && countries_codes[country_name] != "-99")
+          {
+            mini = Math.min(mini, countries_values[country_name]);
+            maxi = Math.max(maxi, countries_values[country_name]);
+          }
+        }
+
+        var colored_countries = {};
+        for (var country_name in countries_codes) {
+          if(country_name in countries_values && countries_codes[country_name] != "-99")
+          {
+            var val = (countries_values[country_name] - mini) / (maxi - mini);
+            colored_countries[countries_codes[country_name]] = blendColors('#ffffff', '#3f83a3', val);
+          }
+        }
+        console.log(colored_countries);
+        map.updateChoropleth(colored_countries);
+    }
+    
+    //DataMaps
+    var map = new Datamap({
+    element: document.getElementById('container'),
+    fills: {
+          defaultFill: '#c0c0c0'
+        }
+    });
+
+    //doublon with test_datamaps.html, put in JavaScript file
+    function get_countries_datas(data)
+    {
+        var countries_datas = {};
+        var allTextLines = data.split(/\r\n|\n/);
+        var headers = allTextLines[0].split(',');
+        for (var i=1; i<allTextLines.length; i++) {
+            var data = allTextLines[i].split(',');
+            if (data.length == headers.length) {
+                var country = data[0];
+                countries_datas[country] = {};
+                for (var j=1; j<headers.length; j++) {
+                    countries_datas[country][headers[j]] = (j == 1 ? data[j] : parseFloat(data[j]));
+                }
+            }
+        }
+        return countries_datas;
+    }
+
+    var sliders_names = ["Economy (GDP per Capita)", "Freedom", "Family", "Trust (Government Corruption)", "Generosity", "Health (Life Expectancy)"];
+    var countries_datas;
+    $(document).ready(function() {
+        $.get("2015.csv", function (data) {
+            countries_datas = get_countries_datas(data);
+            for(var country_name in countries_datas) {
+                var sum = 0;
+                for(var i=0; i<sliders_names.length; i++)
+                    sum += countries_datas[country_name][sliders_names[i]];
+                for(var i=0; i<sliders_names.length; i++)
+                    countries_datas[country_name][sliders_names[i]] /= sum;
+            }
+            modify_value();
+        });
+    });
+
+  function modify_value() {
+    var values = [];
+    var sum = 0;
+    for(var i=0; i<sliders_names.length; i++) {
+        values.push(parseFloat(document.getElementById(sliders_names[i]).value));
+        sum += values[i];
+    }
+    var msg = "You're so sad :(";
+    if(sum > 1e-5)
+    {
+        for(var i=0; i<sliders_names.length; i++)
+            values[i] /= sum;
+        console.log(values);
+        countries_values = {};
+        for(var country_name in countries_datas) {
+            countries_values[country_name] = 0;
+            for(var i=0; i<sliders_names.length; i++)
+                countries_values[country_name] += Math.pow(values[i] - countries_datas[country_name][sliders_names[i]], 2);
+        }
+        processColoration(countries_values);
+    }
+  }
+</script>

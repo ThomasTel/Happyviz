@@ -56,7 +56,7 @@ div.container {
 
     //doublon with test_datamaps.html
     function processColoration(countries_values)
-    { 
+    {
         var countries_codes = {}
         var countries = Datamap.prototype.worldTopo.objects.world.geometries;
         for (var i = 0; i < countries.length; i++) {
@@ -76,11 +76,12 @@ div.container {
         for (var country_name in countries_codes) {
           if(country_name in countries_values && countries_codes[country_name] != "-99")
           {
-            var val = (countries_values[country_name] - mini) / (maxi - mini);
-            colored_countries[countries_codes[country_name]] = blendColors('#ffffff', '#3f83a3', val);
+            //var val = (countries_values[country_name] - mini) / (maxi - mini);
+            var val = countries_values[country_name];
+            console.log(country_name + " " + val);
+            colored_countries[countries_codes[country_name]] = blendColors('#3f83a3', '#ffffff', val);
           }
         }
-        console.log(colored_countries);
         map.updateChoropleth(colored_countries);
     }
     
@@ -114,7 +115,7 @@ div.container {
     var sliders_names = ["Economy (GDP per Capita)", "Freedom", "Family", "Trust (Government Corruption)", "Generosity", "Health (Life Expectancy)"];
     var countries_datas;
     $(document).ready(function() {
-        $.get("2015.csv", function (data) {
+        $.get("http://thomas.tellier.free.fr/Happyviz.git/HappyViz/2015.csv", function (data) {
             countries_datas = get_countries_datas(data);
             for(var country_name in countries_datas) {
                 var sum = 0;
@@ -145,6 +146,9 @@ div.container {
             countries_values[country_name] = 0;
             for(var i=0; i<sliders_names.length; i++)
                 countries_values[country_name] += Math.pow(values[i] - countries_datas[country_name][sliders_names[i]], 2);
+            countries_values[country_name] = Math.pow(countries_values[country_name], 0.5);
+            if(country_name == "France")
+                console.log(countries_values[country_name]);
         }
         processColoration(countries_values);
     }

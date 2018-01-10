@@ -9,7 +9,7 @@
 <script>
     //CSV reading
     $(document).ready(function() {
-        $.get("http://thomas.tellier.free.fr/Happyviz.git/HappyViz/2015.csv", function (data) {
+        $.get("2015.csv", function (data) {
             countries_datas = get_countries_datas(data);
             processColoration(countries_datas);
         });

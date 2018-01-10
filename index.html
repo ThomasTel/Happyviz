@@ -322,7 +322,7 @@ For instance Angolans (ranked 140th in the World Happiness Report) do not value 
     var sliders_names = ["Economy (GDP per Capita)", "Freedom", "Family", "Trust (Government Corruption)", "Generosity", "Health (Life Expectancy)"];
     var countries_datas;
     $(document).ready(function() {
-        $.get("http://thomas.tellier.free.fr/Happyviz.git/HappyViz/2015.csv", function (data) {
+        $.get("2015.csv", function (data) {
             countries_datas = get_countries_datas(data);
         });
     });

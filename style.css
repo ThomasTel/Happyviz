@@ -10,7 +10,7 @@ h3{
     font-family: 'Lato', sans-serif;
     text-align: center;
     font-weight: 400;
-    width:100%;
+    width:80%;
     padding:20px;
     margin:auto;
 }
@@ -25,3 +25,9 @@ p{
     margin:auto;
 }
 
+#section0 {
+    background-image: url("imgs/holi_festival.jpg");
+    background-repeat:no-repeat;
+    background-size:100%;
+    background-position:center;
+}

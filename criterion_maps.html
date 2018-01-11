@@ -76,8 +76,8 @@ div.container {
         for (var country_name in countries_codes) {
           if(country_name in countries_values && countries_codes[country_name] != "-99")
           {
-            //var val = (countries_values[country_name] - mini) / (maxi - mini);
-            var val = countries_values[country_name];
+            var val = (countries_values[country_name] - mini) / (maxi - mini);
+            //var val = countries_values[country_name];
             console.log(country_name + " " + val);
             colored_countries[countries_codes[country_name]] = blendColors('#3f83a3', '#ffffff', val);
           }

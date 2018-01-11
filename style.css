@@ -31,3 +31,12 @@ p{
     background-size:100%;
     background-position:center;
 }
+
+li {
+    font-size: 0.9em;
+    font-family: 'Lato', sans-serif;
+    text-align: justify;
+    font-weight: 400;
+    width:60%;
+    margin:auto;
+}

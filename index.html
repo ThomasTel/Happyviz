@@ -44,6 +44,7 @@
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://d3js.org/topojson.v1.min.js"></script>
 
+    
 <div id="fullpage" style="background-color: rgb(255, 255, 255);">
     <div class="section " id="section0">
         <h1 style="color:white;font-size:300%">Are you happier than your compatriots?</h1>
@@ -62,7 +63,7 @@
     <div class="section " id="section3">
         <h1>To begin with, where are you from?</h1>
         <h3></h3>
-        <select>
+        <select id="country" onchange="change_congrats()">
             <option value="Afghanistan">Afghanistan</option>
             <option value="Angola">Angola</option>
             <option value="Albania">Albania</option>
@@ -215,19 +216,12 @@
     
     <div class="section " id="section2">
 	<h1>How happy are you?</h1>
-        <tr>
-            <td><div id="sliderObj"></div></td>
-        </tr>
-        <div>
-        <input type="range" min="0" max="10">
-        </div>
+        <input id="happiness" oninput="change_congrats()" onchange="change_congrats()" type="range" min="0" max="10" step="0.01">
     </div>
     
     <div class="section " id="section4">
         <h1>Happiness scores around the world</h1>
-        <p>Congratulations! Your are <b>happier</b> on average than your compatriots.<br />
-        <span style="color:red"><b>France</b></span> is the <span style="color:red"><b>x-th</b></span> happiest country in the world.<br /> 
-And if you were a country all by yourself, you would rank <span style="color:red"><b>y</b></span>, just like <span style="color:red"><b>Togo</b></span>.</p>
+        <p id="congrats"></p>
         <iframe id="iframex" sandbox="allow-popups allow-scripts allow-forms allow-same-origin" 
         src="test_datamaps.html" marginwidth="0" marginheight="0" frameborder="0"
         style="width: 70%; height: 60%;" scrolling="no"></iframe>
@@ -272,15 +266,42 @@ For instance <b>Angolans</b> (ranked 140th in the World Happiness Report) do not
     Special thanks to Samuel Huron, professor of data visualization at Télécom Paristech, for his supervision. <br /><br />
     Dataset:</p>
     <li>World Happiness Report, <a href="https://www.kaggle.com/unsdsn/world-happiness">https://www.kaggle.com/unsdsn/world-happiness</p></li>
-    </ul>
     </div>
 
 </div>
 
 <script>
+    function change_congrats()
+    {
+        var country = document.getElementById("country").value;
+        var happiness = parseFloat(document.getElementById("happiness").value);
+        var country_happinness = countries_datas[country]['Happiness Score']
+        var reaction =  happiness > country_happinness ? "Congratulations! Your are <b>happier</b>" : "Oh, it looks like you are <b>less</b> happy";
+        var ego_country = similar_country(happiness);
+        var message = reaction + ' on average than your compatriots.<br />' +
+        '<span style="color:red"><b>' + country + '</b></span> is the <span style="color:red"><b>' + countries_datas[country]['Happiness Rank'] + '<sup>th</sup></b></span> happiest country in the world.<br /> ' +
+        'And if you were a country all by yourself, you would rank <span style="color:red"><b>' + countries_datas[ego_country]['Happiness Rank'] + '</b></span>, just like <span style="color:red"><b>' + ego_country + '</b></span>.';
+        document.getElementById("congrats").innerHTML = message;
+    }
+    
+    function similar_country(happiness)
+    {
+        var bestCountry, bestDiff = 1e9;
+        for(var country_name in countries_datas) {
+            var diff = Math.abs(countries_datas[country_name]['Happiness Score'] - happiness);
+            if(diff < bestDiff) {
+                bestDiff = diff;
+                bestCountry = country_name;
+            }
+        }
+        return bestCountry;
+    }
+            
+    
     //doublon with test_datamaps.html, put in JavaScript file
     function get_countries_datas(data)
     {
+        console.log(data);
         var countries_datas = {};
         var allTextLines = data.split(/\r\n|\n/);
         var headers = allTextLines[0].split(',');
@@ -297,11 +318,10 @@ For instance <b>Angolans</b> (ranked 140th in the World Happiness Report) do not
         return countries_datas;
     }
 
-    var sliders_names = ["Economy (GDP per Capita)", "Freedom", "Family", "Trust (Government Corruption)", "Generosity", "Health (Life Expectancy)"];
-    var countries_datas;
     $(document).ready(function() {
         $.get("2015.csv", function (data) {
             countries_datas = get_countries_datas(data);
+            change_congrats();
         });
     });
 </script>

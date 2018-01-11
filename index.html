@@ -279,8 +279,8 @@ For instance <b>Angolans</b> (ranked 140th in the World Happiness Report) do not
         var reaction =  happiness > country_happinness ? "Congratulations! Your are <b>happier</b>" : "Oh, it looks like you are <b>less</b> happy";
         var ego_country = similar_country(happiness);
         var message = reaction + ' on average than your compatriots.<br />' +
-        '<span style="color:red"><b>' + country + '</b></span> is the <span style="color:red"><b>' + countries_datas[country]['Happiness Rank'] + '<sup>th</sup></b></span> happiest country in the world.<br /> ' +
-        'And if you were a country all by yourself, you would rank <span style="color:red"><b>' + countries_datas[ego_country]['Happiness Rank'] + '</b></span>, just like <span style="color:red"><b>' + ego_country + '</b></span>.';
+        '<span style="color:#1c4587"><b>' + country + '</b></span> is the <span style="color:#1c4587"><b>' + countries_datas[country]['Happiness Rank'] + '<sup>th</sup></b></span> happiest country in the world.<br /> ' +
+        'And if you were a country all by yourself, you would rank <span style="color:#1c4587"><b>' + countries_datas[ego_country]['Happiness Rank'] + '</b></span>, just like <span style="color:#1c4587"><b>' + ego_country + '</b></span>.';
         document.getElementById("congrats").innerHTML = message;
     }
     

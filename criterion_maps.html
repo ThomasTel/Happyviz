@@ -6,7 +6,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
 <script src="datamaps.world.min.js"></script>
 
+
+<link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css">
 <style>
 div.left {
     //background: #999;
@@ -23,9 +26,13 @@ p{
     font-family: 'Lato', sans-serif;
 }
 div.container {
-  float:right;
-  width:80%;
-    height: 100%;
+    float:right;
+    width:80%;
+    height: 70%;
+}
+div.top {
+    float:top;
+    height: 30%;
 }
 </style>
 <div class="box">
@@ -44,6 +51,16 @@ div.container {
             <p>Health</p>
             <input type="range" min="0" max="1" step="0.01" id="Health (Life Expectancy)" oninput="modify_value()" onchange="modify_value()">
         </div>
+    </div>
+    <div class="top">
+        <br />
+        <h1 style="font-size:1.2em">With which countries do you share your perception of happiness?</h1>
+        <p style="font-size:0.75em">On the map below, start by selecting <b>how important each factor</b> (on the left) is for your happiness.<br />
+        <img align="right" src="imgs/explanation.png" width="300px"/>
+        You will see then countries’ colors change on the map:<br />
+        &emsp;&emsp;-the countries in <span style="color:#3f83a3">blue</span> share  a <b>similar perception</b> of happiness<br />
+        &emsp;&emsp;-the countries in <span style="color:#f48000">orange</span> have a <b>different perception</b> of happiness<br />
+        Note that you can click on a country to make its perception appears.</p>
     </div>
     <div class="container" id="container"></div>
 </div>

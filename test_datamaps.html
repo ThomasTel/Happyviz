@@ -12,7 +12,12 @@
         $.get("2015.csv", function (data) {
             countries_datas = get_countries_datas(data);
             processColoration(countries_datas);
+            /*alert('a');
+            window.addEventListener('message', function(e) {
+                alert(e.data) 
+            }, false);*/
         });
+        
     });
 
     function get_countries_datas(data)

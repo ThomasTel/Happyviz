@@ -285,6 +285,10 @@ For instance <b>Angolans</b> (ranked 140th in the World Happiness Report) do not
         var sad = document.getElementById("sad");
         happy.height = happiness * 20;
         sad.height = (10 - happiness) * 20;
+        if(happiness == 10)
+            happy.src = "imgs/trololol.jpg";
+        else
+            happy.src = "imgs/happy.svg";
     }
     
     function change_congrats()

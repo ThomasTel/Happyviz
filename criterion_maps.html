@@ -32,17 +32,17 @@ div.container {
     <div class="left">
         <div class="sliders">
             <p>Money</p>
-            <input type="range" min="0" max="10" id="Economy (GDP per Capita)" oninput="modify_value()" onchange="modify_value()">
+            <input type="range" min="0" max="10" step="any" id="Economy (GDP per Capita)" oninput="modify_value()" onchange="modify_value()">
             <p>Freedom</p>
-            <input type="range" min="0" max="10" id="Freedom" oninput="modify_value()" onchange="modify_value()">
+            <input type="range" min="0" max="10" step="any" id="Freedom" oninput="modify_value()" onchange="modify_value()">
             <p>Family</p>
-            <input type="range" min="0" max="10" id="Family" oninput="modify_value()" onchange="modify_value()">
+            <input type="range" min="0" max="10" step="any" id="Family" oninput="modify_value()" onchange="modify_value()">
             <p>Trust in Governement</p>
-            <input type="range" min="0" max="10" id="Trust (Government Corruption)" oninput="modify_value()" onchange="modify_value()">
+            <input type="range" min="0" max="10" step="any" id="Trust (Government Corruption)" oninput="modify_value()" onchange="modify_value()">
             <p>Generosity</p>
-            <input type="range" min="0" max="10" id="Generosity" oninput="modify_value()"onchange="modify_value()">
+            <input type="range" min="0" max="10" step="any" id="Generosity" oninput="modify_value()"onchange="modify_value()">
             <p>Health</p>
-            <input type="range" min="0" max="10" id="Health (Life Expectancy)" oninput="modify_value()" onchange="modify_value()">
+            <input type="range" min="0" max="10" step="any" id="Health (Life Expectancy)" oninput="modify_value()" onchange="modify_value()">
         </div>
     </div>
     <div class="container" id="container"></div>
@@ -79,7 +79,7 @@ div.container {
             var val = (countries_values[country_name] - mini) / (maxi - mini);
             //var val = countries_values[country_name];
             console.log(country_name + " " + val);
-            colored_countries[countries_codes[country_name]] = blendColors('#3f83a3', '#ffffff', val);
+            colored_countries[countries_codes[country_name]] = blendColors('#3f83a3', '#f48000', val);
           }
         }
         map.updateChoropleth(colored_countries);
@@ -114,6 +114,7 @@ div.container {
 
     var sliders_names = ["Economy (GDP per Capita)", "Freedom", "Family", "Trust (Government Corruption)", "Generosity", "Health (Life Expectancy)"];
     var countries_datas;
+    var min_max = {};
     $(document).ready(function() {
         $.get("2015.csv", function (data) {
             countries_datas = get_countries_datas(data);
@@ -124,33 +125,45 @@ div.container {
                 for(var i=0; i<sliders_names.length; i++)
                     countries_datas[country_name][sliders_names[i]] /= sum;
             }
+            for(var i=0; i<sliders_names.length; i++)
+                min_max[sliders_names[i]] = {'min': 1e9, 'max': 0};
+            for(var i=0; i<sliders_names.length; i++)
+                for(var country_name in countries_datas) {
+                    //if(countries_datas[country_name][sliders_names[i]] < 1e-2)
+                        //console.log(country_name + " " + sliders_names[i]);
+                    min_max[sliders_names[i]]['min'] = Math.min(min_max[sliders_names[i]]['min'], countries_datas[country_name][sliders_names[i]]);
+                    min_max[sliders_names[i]]['max'] = Math.max(min_max[sliders_names[i]]['max'], countries_datas[country_name][sliders_names[i]]);
+                }
+            for(var i=0; i<sliders_names.length; i++)
+                console.log(sliders_names[i] + " " + min_max[sliders_names[i]]['min'] + " " + min_max[sliders_names[i]]['max']);
             modify_value();
         });
     });
 
-  function modify_value() {
-    var values = [];
-    var sum = 0;
-    for(var i=0; i<sliders_names.length; i++) {
-        values.push(parseFloat(document.getElementById(sliders_names[i]).value));
-        sum += values[i];
-    }
-    var msg = "You're so sad :(";
-    if(sum > 1e-5)
-    {
-        for(var i=0; i<sliders_names.length; i++)
-            values[i] /= sum;
-        console.log(values);
-        countries_values = {};
-        for(var country_name in countries_datas) {
-            countries_values[country_name] = 0;
-            for(var i=0; i<sliders_names.length; i++)
-                countries_values[country_name] += Math.pow(values[i] - countries_datas[country_name][sliders_names[i]], 2);
-            countries_values[country_name] = Math.pow(countries_values[country_name], 0.5);
-            if(country_name == "France")
-                console.log(countries_values[country_name]);
+    function modify_value() {
+        var values = [];
+        var sum = 0;
+        for(var i=0; i<sliders_names.length; i++) {
+            values.push(parseFloat(document.getElementById(sliders_names[i]).value));
+            console.log(values[i] + " -> " + ((values[i]/10 - min_max[sliders_names[i]]['min'])/(min_max[sliders_names[i]]['max'] - min_max[sliders_names[i]]['min'])));
+            values[i] = (values[i]/10 - min_max[sliders_names[i]]['min'])/(min_max[sliders_names[i]]['max'] - min_max[sliders_names[i]]['min']);
+            sum += values[i];
         }
-        processColoration(countries_values);
+        if(sum > 1e-5)
+        {
+            for(var i=0; i<sliders_names.length; i++)
+                values[i] /= sum;
+            console.log(values);
+            countries_values = {};
+            for(var country_name in countries_datas) {
+                countries_values[country_name] = 0;
+                for(var i=0; i<sliders_names.length; i++)
+                    countries_values[country_name] += Math.pow(values[i] - countries_datas[country_name][sliders_names[i]], 2);
+                countries_values[country_name] = Math.pow(countries_values[country_name], 0.5);
+                if(country_name == "France")
+                    console.log(countries_values[country_name]);
+            }
+            processColoration(countries_values);
+        }
     }
-  }
 </script>

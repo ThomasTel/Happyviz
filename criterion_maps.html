@@ -9,14 +9,14 @@
 <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 <style>
 div.left {
-  //background: #999;
+    //background: #999;
     float:left; 
     width: 20%;
     height: 100%;
       display: flex;
-  justify-content: center;
-  align-items: center; 
-  text-align: center;
+    justify-content: center;
+    align-items: center; 
+    text-align: center;
 }
 p{
     font-size: 1em;
@@ -32,7 +32,7 @@ div.container {
     <div class="left">
         <div class="sliders">
             <p>Money</p>
-            <input type="range" min="0" max="1" step="0.01" id="Economy (GDP per Capita)" oninput="modify_value()" onchange="modify_value()">
+            <input type="range" min="0" max="1" step="0.01" value="0.5" id="Economy (GDP per Capita)" oninput="modify_value()" onchange="modify_value()">
             <p>Freedom</p>
             <input type="range" min="0" max="1" step="0.01" id="Freedom" oninput="modify_value()" onchange="modify_value()">
             <p>Family</p>
@@ -100,7 +100,7 @@ div.container {
                 for(var i=0; i<sliders_names.length; i++) {
                     var val = countries_datas[geography.properties.name][sliders_names[i]];
                     document.getElementById(sliders_names[i]).value = val; //normalize(val, min_max[sliders_names[i]]['min'], min_max[sliders_names[i]]['max']);
-                    console.log(sliders_names[i] + " " + val);
+                    //console.log(sliders_names[i] + " " + val);
                     //console.log(countries_datas[geography.properties.name]);
                 }
                 modify_value();
@@ -154,6 +154,7 @@ div.container {
             for(var i=0; i<sliders_names.length; i++) {
                 document.getElementById(sliders_names[i]).min = min_max[sliders_names[i]]['min'];
                 document.getElementById(sliders_names[i]).max = min_max[sliders_names[i]]['max'];
+                document.getElementById(sliders_names[i]).value = (min_max[sliders_names[i]]['max'] + min_max[sliders_names[i]]['min'])/2;
             }
             //for(var i=0; i<sliders_names.length; i++)
                 //console.log(sliders_names[i] + " " + min_max[sliders_names[i]]['min'] + " " + min_max[sliders_names[i]]['max']);

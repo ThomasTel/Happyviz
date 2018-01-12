@@ -216,7 +216,9 @@
     
     <div class="section " id="section2">
 	<h1>How happy are you?</h1>
-        <input id="happiness" oninput="change_congrats()" onchange="change_congrats()" type="range" min="0" max="10" step="0.01">
+        <input id="happiness" oninput="change_congrats();change_emoticons();" onchange="change_congrats();change_emoticons();" type="range" min="0" max="10" step="0.01">
+        <img src="imgs/happy.svg" height="100" id="happy" style="position:absolute;right:100px"/>
+        <img src="imgs/sad.svg" height="100" id="sad" style="position:absolute;left:100px"/>
     </div>
     
     <div class="section " id="section4">
@@ -271,10 +273,24 @@ For instance <b>Angolans</b> (ranked 140th in the World Happiness Report) do not
 </div>
 
 <script>
+    function get_happiness()
+    {
+        return parseFloat(document.getElementById("happiness").value);
+    }
+    
+    function change_emoticons()
+    {
+        var happiness = get_happiness();
+        var happy = document.getElementById("happy");
+        var sad = document.getElementById("sad");
+        happy.height = happiness * 20;
+        sad.height = (10 - happiness) * 20;
+    }
+    
     function change_congrats()
     {
         var country = document.getElementById("country").value;
-        var happiness = parseFloat(document.getElementById("happiness").value);
+        var happiness = get_happiness();
         var country_happinness = countries_datas[country]['Happiness Score']
         var reaction =  happiness > country_happinness ? "Congratulations! Your are <b>happier</b>" : "Oh, it looks like you are <b>less</b> happy";
         var ego_country = similar_country(happiness);
@@ -296,12 +312,10 @@ For instance <b>Angolans</b> (ranked 140th in the World Happiness Report) do not
         }
         return bestCountry;
     }
-            
     
     //doublon with test_datamaps.html, put in JavaScript file
     function get_countries_datas(data)
     {
-        console.log(data);
         var countries_datas = {};
         var allTextLines = data.split(/\r\n|\n/);
         var headers = allTextLines[0].split(',');
@@ -322,6 +336,7 @@ For instance <b>Angolans</b> (ranked 140th in the World Happiness Report) do not
         $.get("2015.csv", function (data) {
             countries_datas = get_countries_datas(data);
             change_congrats();
+            change_emoticons();
         });
     });
 </script>

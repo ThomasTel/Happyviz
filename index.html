@@ -267,9 +267,9 @@ For instance <b>Angolans</b> (ranked 140th in the World Happiness Report) do not
 </div>
 
 <script>
-    /*function send() {
-        document.getElementById('iframex').contentWindow.postMessage("toto", '*');
-    }*/
+    function send(country) {
+        document.getElementById('iframex').contentWindow.postMessage(country, '*');
+    }
 
     function get_happiness()
     {
@@ -310,9 +310,10 @@ For instance <b>Angolans</b> (ranked 140th in the World Happiness Report) do not
         var country_happinness = countries_datas[country]['Happiness Score']
         var reaction =  happiness > country_happinness ? "Congratulations! Your are <b>happier</b>" : "Oh, it looks like you are <b>less</b> happy";
         var ego_country = similar_country(happiness);
+        send(ego_country);
         var message = reaction + ' on average than your compatriots.<br />' +
         '<span style="color:#1c4587"><b>' + country + '</b></span> is the <span style="color:#1c4587"><b>' + countries_datas[country]['Happiness Rank'] + '<sup>th</sup></b></span> happiest country in the world.<br /> ' +
-        'And if you were a country all by yourself, you would rank <span style="color:#1c4587"><b>' + countries_datas[ego_country]['Happiness Rank'] + '</b></span>, just like <span style="color:#1c4587"><b>' + ego_country + '</b></span>.';
+        'And if you were a country all by yourself, you would rank <span style="color:#1c4587"><b>' + countries_datas[ego_country]['Happiness Rank'] + '</b></span>, just like <span style="color:#f48000"><b>' + ego_country + '</b></span>.';
         document.getElementById("congrats").innerHTML = message;
     }
     

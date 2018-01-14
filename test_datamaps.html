@@ -12,10 +12,13 @@
         $.get("2015.csv", function (data) {
             countries_datas = get_countries_datas(data);
             processColoration(countries_datas);
-            /*alert('a');
             window.addEventListener('message', function(e) {
-                alert(e.data) 
-            }, false);*/
+                console.log(e.data);
+                var spec_colored_countries = jQuery.extend(true, {}, colored_countries);
+                console.log(countries_codes[e.data]);
+                spec_colored_countries[countries_codes[e.data]] = '#f48000';
+                map.updateChoropleth(spec_colored_countries);
+            }, false);
         });
         
     });
@@ -48,17 +51,17 @@
         return "#"+(0x1000000+(Math.round((R2-R1)*p)+R1)*0x10000+(Math.round((G2-G1)*p)+G1)*0x100+(Math.round((B2-B1)*p)+B1)).toString(16).slice(1);
     }
 
+    countries_codes = {};
+    colored_countries = {};
     function processColoration(countries_datas)
     {
         var mini = 2.839, maxi = 7.587; //to calculate, no magic number
             
-        var countries_codes = {}
         var countries = Datamap.prototype.worldTopo.objects.world.geometries;
         for (var i = 0; i < countries.length; i++) {
           countries_codes[countries[i].properties.name] = countries[i].id;
         }
         
-        var colored_countries = {};
         for (var country_name in countries_codes) {
           if(country_name in countries_datas && "Happiness Score" in countries_datas[country_name]
           && countries_codes[country_name] != "-99")
@@ -79,6 +82,7 @@
           defaultFill: '#c0c0c0'
         }
     });
+     map.legend();
     
 </script>
 <style>

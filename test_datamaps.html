@@ -13,9 +13,8 @@
             countries_datas = get_countries_datas(data);
             processColoration(countries_datas);
             window.addEventListener('message', function(e) {
-                console.log(e.data);
                 var spec_colored_countries = jQuery.extend(true, {}, colored_countries);
-                console.log(countries_codes[e.data]);
+                if(e.data in countries_codes && countries_codes[e.data] in colored_countries && countries_codes[e.data] != "-99")
                 spec_colored_countries[countries_codes[e.data]] = '#f48000';
                 map.updateChoropleth(spec_colored_countries);
             }, false);
@@ -66,12 +65,10 @@
           if(country_name in countries_datas && "Happiness Score" in countries_datas[country_name]
           && countries_codes[country_name] != "-99")
           {
-            //document.write('<option value="' + country_name + '">' + country_name + '</option>\r\n');
             var happiness = (countries_datas[country_name]["Happiness Score"] - mini) / (maxi - mini);
             colored_countries[countries_codes[country_name]] = blendColors('#ffffff', '#3f83a3', happiness);
           }
         }
-        console.log(colored_countries);
         map.updateChoropleth(colored_countries);
     }
     

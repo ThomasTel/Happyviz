@@ -39,7 +39,7 @@ div.top {
     <div class="left">
         <div class="sliders">
             <p>Money</p>
-            <input type="range" min="0" max="1" step="0.01" value="0.5" id="Economy (GDP per Capita)" oninput="modify_value()" onchange="modify_value()">
+            <input type="range" min="0" max="1" step="0.01" id="Economy (GDP per Capita)" oninput="modify_value()" onchange="modify_value()">
             <p>Freedom</p>
             <input type="range" min="0" max="1" step="0.01" id="Freedom" oninput="modify_value()" onchange="modify_value()">
             <p>Family</p>
@@ -180,7 +180,7 @@ div.top {
     });
 
     function modify_value() {
-        console.log(map);
+        //console.log(map);
         var values = [];
         var sum = 0;
         for(var i=0; i<sliders_names.length; i++) {
@@ -198,11 +198,11 @@ div.top {
                 for(var i=0; i<sliders_names.length; i++)
                     countries_values[country_name] += Math.pow(values[i] - countries_datas[country_name][sliders_names[i]], 2);
                 countries_values[country_name] = Math.pow(countries_values[country_name], 0.5);
-                if(country_name == "France") {
+                /*if(country_name == "France") {
                     for(var i=0; i<sliders_names.length; i++)
                         console.log(sliders_names[i] + " " + values[i] + " - " + countries_datas[country_name][sliders_names[i]]);
                     console.log(countries_values[country_name]);
-                }
+                }*/
             }
             processColoration(countries_values);
         }
